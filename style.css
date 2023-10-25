@@ -1,0 +1,18 @@
+/*
+Name:
+Description: 
+*/
+
+body, div {
+    display: block;
+    margin-left: 1%;
+}
+
+div {
+    margin-top:2%;
+}
+
+p {
+    font-size: 35px;
+    font-weight: bold;
+}
