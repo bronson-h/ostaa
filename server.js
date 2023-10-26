@@ -8,6 +8,7 @@ const express = require('express');
 const parser = require('body-parser');
 const app = express();
 const port = 3000;
+app.use(express.static('public_html'));
 app.use(parser.json());
 
 const db  = mongoose.connection;
@@ -33,13 +34,22 @@ var itemSchema = new mongoose.Schema({
 var itemData = mongoose.model('item', itemSchema);
 
 // gets users from database and returns them as a JSON array to client
-app.get('/get/users', (req,res) => {});
+app.get('/get/users', (req,res) => {
+    let users = userData.find({}).exec();
+    res.end(users.json());
+});
 
 // gets items from database and returns them as a JSON array to client
-app.get('/get/items/', (req,res) => {});
+app.get('/get/items/', (req,res) => {
+    let items = itemData.find({}).exec();
+    res.end(items.json());
+});
 
 // gets listings based on username from database and returns them as JSON array
-app.get('/get/listings/:username', (req,res) => {});
+app.get('/get/listings/:username', (req,res) => {
+    let userItems = itemData.find({}).exec(`${req.params.username}`);
+    res.end(userItems.json());
+});
 
 // gets purchases from database by certain username and returns JSON array
 app.get('/get/purchases/:username', (req,res) => {
