@@ -1,5 +1,5 @@
 /**
- * Name: Bronson Housmans
+ * Name: Bronson Housmans and Billy Dolny
  * Description:
  */
 
@@ -22,7 +22,7 @@ var usernameSchema = new mongoose.Schema({
     listings: [],
     purchases: []
 });
-var userData = mongoose.model('username', usernameSchema);
+var userData = mongoose.model('userData', usernameSchema);
 
 var itemSchema = new mongoose.Schema({
     title: String,
@@ -31,86 +31,65 @@ var itemSchema = new mongoose.Schema({
     price: Number,
     stat: String
 });
-var itemData = mongoose.model('item', itemSchema);
+var itemData = mongoose.model('itemData', itemSchema);
 
 // gets users from database and returns them as a JSON array to client
 app.get('/get/users', (req,res) => {
     let users = userData.find({}).exec();
-    res.end(users.json());
+    users.then((results) => {
+        res.json(results);
+    });
 });
 
 // gets items from database and returns them as a JSON array to client
 app.get('/get/items/', (req,res) => {
     let items = itemData.find({}).exec();
-    res.end(items.json());
+    items.then((results) => {
+        res.json(results);
+    });
 });
 
 // gets listings based on username from database and returns them as JSON array
 app.get('/get/listings/:username', (req,res) => {
-    let userItems = itemData.find({}).exec(`${req.params.username}`);
-    res.end(userItems.json());
+    let userItems = userData.find({username:{$regex:req.params.username}}).exec();
+    userItems.then((results) => {
+        res.json(results[0].listings);
+    })
 });
 
 // gets purchases from database by certain username and returns JSON array
 app.get('/get/purchases/:username', (req,res) => {
-    let name = req.params.username;
-    let query = userData.find({name})
-    query.then((documents) => {
-        user = documents[0];
-        console.log(user);
-        purchasesDataList = user.purchases;
-        purchaseList = [];
-        for (var i = 0; i < purchasesDataList; i++){
-            let item = purchasesDataList[i];
-            let jsonItem = {
-                title: item.title,
-                description: item.description,
-                image: item.image,
-                price: item.price,
-                status: item.status,
-            }
-            purchaseList.push(jsonItem);
-        }
-        res.end(purchaseList.json());
-    });
+    let userPurchases = userData.find({username:{$regex:req.params.username}}).exec();
+    userPurchases.then((results) => {
+        res.json(results[0].purchases);
+    })
 });
 
 // returns JSON list of all usernames that contain keyword
 app.get('/search/users/:keyword', (req,res) => {
-    let word = req.params.keyword;
-    let query = itemData.find({word})
-    query.then((documents) => {
-        user = documents[0];
-        console.log(user);
-        listingDataList = user.listings;
-        listingList = [];
-        for (var i = 0; i < listingDataList; i++){
-            let item = listingDataList[i];
-            let jsonItem = {
-                title: item.title,
-                description: item.description,
-                image: item.image,
-                price: item.price,
-                status: item.status,
-            }
-            listingList.push(jsonItem);
-        }
-        res.end(listingList.json());
-    });
+    let query = userData.find({username:{$regex:req.params.keyword}}).exec();
+    query.then((results) => {
+        res.json(results);
+    })
 });
 
 // returns JSON list of all items whose descriptions contain the keyword 
-app.get('/search/items/:keyword', (req,res) => {});
+app.get('/search/items/:keyword', (req,res) => {
+    let query = itemData.find({description:{$regex:req.params.keyword}}).exec();
+    query.then((results) => {
+        res.json(results);
+    })
+});
 
 // adds a user to the database
 app.post('/add/user/', (req,res) => {
 
     let name = req.body.username;
     let pass = req.body.password;
-    let userData = new usernameSchema({username: name, password: pass});
-    userData.save()
+    let user = new userData({username: name, password: pass});
+    user.save()
         .then(() => {
-            console.log(userData); // You can log the saved message here
+            console.log(user); // You can log the saved message here
         })
         .catch((error) => {
             console.error("Error saving message:", error);
@@ -125,17 +104,20 @@ app.post('/add/item/:username', (req,res) => {
     let pImg = req.body.image;
     let pPrice = req.body.price;
     let pStat = req.body.stat;
-    let pUser = req.body.username; 
-    let item = new itemData({title: pTitle, description: pDesc, image: pImg, price: pPrice, status: pStat});
+    let pUser = req.body.username;
+    let itemObj = {title: pTitle, description: pDesc, image: pImg, price: pPrice, status: pStat}; 
+    let item = new itemData(itemObj);
     item.save()
         .then(() => {
             console.log(item); // You can log the saved message here
-            let query = userData.find({pUser})
+            let query = userData.find({username:{$regex:pUser}}).exec();
             query.then((documents) => {
-                user = documents[0];
+                let user = documents[0];
                 console.log(user);
                 let list = user.listings
-                list.push(item);
+                list.push(itemObj);
+                console.log(user);
+                return user.save();
             });
         })
         .catch((error) => {
