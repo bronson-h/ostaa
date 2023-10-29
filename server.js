@@ -22,7 +22,7 @@ var usernameSchema = new mongoose.Schema({
     listings: [],
     purchases: []
 });
-var userData = mongoose.model('username', usernameSchema);
+var userData = mongoose.model('userData', usernameSchema);
 
 var itemSchema = new mongoose.Schema({
     title: String,
@@ -31,7 +31,7 @@ var itemSchema = new mongoose.Schema({
     price: Number,
     stat: String
 });
-var itemData = mongoose.model('item', itemSchema);
+var itemData = mongoose.model('itemData', itemSchema);
 
 // gets users from database and returns them as a JSON array to client
 app.get('/get/users', (req,res) => {
@@ -78,12 +78,13 @@ app.get('/get/purchases/:username', (req,res) => {
 // returns JSON list of all usernames that contain keyword
 app.get('/search/users/:keyword', (req,res) => {
     let word = req.params.keyword;
-    let query = itemData.find({word})
+    let query = itemData.find({username: word})
+    console.log(query);
     query.then((documents) => {
         user = documents[0];
         console.log(user);
-        listingDataList = user.listings;
-        listingList = [];
+        let listingDataList = user.listings;
+        let listingList = [];
         for (var i = 0; i < listingDataList; i++){
             let item = listingDataList[i];
             let jsonItem = {
@@ -107,10 +108,10 @@ app.post('/add/user/', (req,res) => {
 
     let name = req.body.username;
     let pass = req.body.password;
-    let userData = new usernameSchema({username: name, password: pass});
-    userData.save()
+    let user = new userData({username: name, password: pass});
+    user.save()
         .then(() => {
-            console.log(userData); // You can log the saved message here
+            console.log(user); // You can log the saved message here
         })
         .catch((error) => {
             console.error("Error saving message:", error);
