@@ -37,15 +37,19 @@ var itemData = mongoose.model('itemData', itemSchema);
 app.get('/get/users', (req,res) => {
     let users = userData.find({}).exec();
     users.then((results) => {
-        res.json(results);
+        const formattedJSON = JSON.stringify(results, null, 2);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(formattedJSON);
     });
 });
 
 // gets items from database and returns them as a JSON array to client
-app.get('/get/items/', (req,res) => {
+app.get('/get/items', (req,res) => {
     let items = itemData.find({}).exec();
     items.then((results) => {
-        res.json(results);
+        const formattedJSON = JSON.stringify(results, null, 2);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(formattedJSON);
     });
 });
 
@@ -53,7 +57,9 @@ app.get('/get/items/', (req,res) => {
 app.get('/get/listings/:username', (req,res) => {
     let userItems = userData.find({username:{$regex:req.params.username}}).exec();
     userItems.then((results) => {
-        res.json(results[0].listings);
+        const formattedJSON = JSON.stringify(results[0].listings, null, 2);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(formattedJSON);
     })
 });
 
@@ -61,7 +67,9 @@ app.get('/get/listings/:username', (req,res) => {
 app.get('/get/purchases/:username', (req,res) => {
     let userPurchases = userData.find({username:{$regex:req.params.username}}).exec();
     userPurchases.then((results) => {
-        res.json(results[0].purchases);
+        const formattedJSON = JSON.stringify(results[0].purchases, null, 2);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(formattedJSON);
     })
 });
 
@@ -69,7 +77,9 @@ app.get('/get/purchases/:username', (req,res) => {
 app.get('/search/users/:keyword', (req,res) => {
     let query = userData.find({username:{$regex:req.params.keyword}}).exec();
     query.then((results) => {
-        res.json(results);
+        const formattedJSON = JSON.stringify(results[0].purchases, null, 2);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(formattedJSON);
     })
 });
 
@@ -77,7 +87,9 @@ app.get('/search/users/:keyword', (req,res) => {
 app.get('/search/items/:keyword', (req,res) => {
     let query = itemData.find({description:{$regex:req.params.keyword}}).exec();
     query.then((results) => {
-        res.json(results);
+        const formattedJSON = JSON.stringify(results, null, 2);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(formattedJSON);
     })
 });
 
