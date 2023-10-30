@@ -1,6 +1,7 @@
 /**
  * Name: Bronson Housmans and Billy Dolny
- * Description:
+ * Description: Client side functionality for the Ostaa page. Includes post
+ * requests sent to server for adding a user and adding an item.
  */
 
 function addNewUser() {

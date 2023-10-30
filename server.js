@@ -1,6 +1,10 @@
 /**
  * Name: Bronson Housmans and Billy Dolny
- * Description:
+ * Description: Server for the Ostaa page. Contains the schema for the database
+ * such that information for users and items are accurate. Is able to handle 
+ * get requests where the server will send back information in JSON formatting.
+ * Also able to have post requests for adding a user and an item that can be 
+ * either for sale or sold.
  */
 
 const mongoose = require('mongoose');
@@ -115,27 +119,38 @@ app.post('/add/item/:username', (req,res) => {
     let pDesc = req.body.description;
     let pImg = req.body.image;
     let pPrice = req.body.price;
-    let pStat = req.body.stat;
+    let pStat = req.body.status;
     let pUser = req.body.username;
-    let itemObj = {title: pTitle, description: pDesc, image: pImg, price: pPrice, status: pStat}; 
-    let item = new itemData(itemObj);
-    item.save()
-        .then(() => {
-            console.log(item); // You can log the saved message here
-            let query = userData.find({username:{$regex:pUser}}).exec();
-            query.then((documents) => {
-                let user = documents[0];
-                console.log(user);
-                let list = user.listings
-                list.push(itemObj);
-                console.log(user);
-                return user.save();
+    let itemObj = {title: pTitle, description: pDesc, image: pImg, price: pPrice, status: pStat};
+    if(pStat == 'SALE') { 
+        let item = new itemData(itemObj);
+        item.save()
+            .then(() => {
+                console.log(item); // You can log the saved message here
+                let query = userData.find({username:{$regex:pUser}}).exec();
+                query.then((documents) => {
+                    let user = documents[0];
+                    console.log(user);
+                    let list = user.listings
+                    list.push(itemObj);
+                    console.log(user);
+                    return user.save();
+                });
+            })
+            .catch((error) => {
+                console.error("Error saving message:", error);
+                res.status(500).end("Error saving message.");
             });
+    } else if(pStat == 'SOLD') {
+        let query = userData.find({username:{$regex:pUser}}).exec();
+        query.then((documents) => {
+            let user = documents[0];
+            let itemsPurchased = user.purchases;
+            itemsPurchased.push(itemObj);
+            console.log(user);
+            return user.save();
         })
-        .catch((error) => {
-            console.error("Error saving message:", error);
-            res.status(500).end("Error saving message.");
-        });
+    }
 });
 
 app.listen(port, () => 
