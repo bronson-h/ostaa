@@ -4,6 +4,11 @@
  * requests sent to server for adding a user and adding an item.
  */
 
+/**
+ * This function is used when someone tries to create a new user
+ * They are able to create the name and password for the user then is
+ * sent to the server to be created.
+ */
 function addNewUser() {
     let user = {
         username: document.getElementById('username').value,
@@ -21,7 +26,12 @@ function addNewUser() {
         console.log(err);
     })
 }
-
+/**
+ * This function is used when the user is adding an item to the 
+ * server. They will need to add pricing, title, description, image,
+ * status, and the username that created the item. after submitting it 
+ * it will be put into the server.
+ */
 function addItem() {
     let item = {
         title: document.getElementById('title').value,

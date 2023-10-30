@@ -1,5 +1,6 @@
 /**
  * Name: Bronson Housmans and Billy Dolny
+ * Project: Ostaa Part 1
  * Description: Server for the Ostaa page. Contains the schema for the database
  * such that information for users and items are accurate. Is able to handle 
  * get requests where the server will send back information in JSON formatting.
@@ -14,7 +15,7 @@ const app = express();
 const port = 80;
 app.use(express.static('public_html'));
 app.use(parser.json());
-
+// Sets up the mongoose database
 const db  = mongoose.connection;
 const mongoDBURL = 'mongodb://127.0.0.1/ostaa';
 mongoose.connect(mongoDBURL, { useNewUrlParser: true });
