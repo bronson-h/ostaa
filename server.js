@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const parser = require('body-parser');
 const app = express();
-const port = 3000;
+const port = 80;
 app.use(express.static('public_html'));
 app.use(parser.json());
 
