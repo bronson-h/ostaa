@@ -1,0 +1,20 @@
+/*
+Name: Bronson Housmans and Billy Dolny
+Project: Ostaa Part 1
+Description: This is the client end of the website. There is 
+not a lot of styling since this client website is simple and 
+used for debugging.
+*/
+
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: lightblue;
+}
+#ostaa {
+    color: blue;
+    font-size: 36px;
+}
+div {
+    margin-left: 3%;
+}

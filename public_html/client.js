@@ -10,9 +10,10 @@
  * sent to the server to be created.
  */
 function addNewUser() {
+    alert('User created!');
     let user = {
-        username: document.getElementById('username').value,
-        password: document.getElementById('password').value,
+        username: document.getElementById('newUsername').value,
+        password: document.getElementById('newPassword').value,
         listings: [],
         purchases: []
     };
