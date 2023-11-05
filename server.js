@@ -17,6 +17,7 @@ const port = 80;
 app.use(cookieParser());
 app.use(express.json());
 app.use(parser.json());
+
 // Sets up the mongoose database
 const db  = mongoose.connection;
 const mongoDBURL = 'mongodb://127.0.0.1/ostaa';
@@ -73,10 +74,10 @@ function authenticate(req, res, next) {
         sessions[c.login.username].id == c.login.sessionID) {
         next();
       } else {
-        res.redirect('/account/index.html');
+        res.redirect('/index.html');
       }
     }  else {
-      res.redirect('/account/index.html');
+      res.redirect('/index.html');
     }
   }
   
@@ -87,19 +88,19 @@ function authenticate(req, res, next) {
   });
   app.use(express.static('public_html'))
 
-  app.post('/account/login', (req, res) => { 
+  app.post('/login', (req, res) => { 
     console.log(sessions);
     let u = req.body;
     let p1 = userData.find({username: u.username, password: u.password}).exec();
     p1.then( (results) => { 
       if (results.length == 0) {
-        res.end('Could not find account');
+        res.end('Unsuccessful');
       } else {
         let sid = addSession(u.username);  
         res.cookie("login", 
           {username: u.username, sessionID: sid}, 
           {maxAge: 60000 * 2 });
-        res.end('SUCCESS');
+        res.end('Successful');
       }
     });
   });
