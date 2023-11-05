@@ -4,6 +4,8 @@
  * requests sent to server for adding a user and adding an item.
  */
 
+const { response } = require("express");
+
 /**
  * This function is used when someone tries to create a new user
  * They are able to create the name and password for the user then is
@@ -17,6 +19,8 @@ function addNewUser() {
         listings: [],
         purchases: []
     };
+
+
     fetch('/add/user/', {
         method:'POST',
         body: JSON.stringify(user),

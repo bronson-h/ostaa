@@ -82,7 +82,7 @@ app.get('/get/purchases/:username', (req,res) => {
 app.get('/search/users/:keyword', (req,res) => {
     let query = userData.find({username:{$regex:req.params.keyword}}).exec();
     query.then((results) => {
-        const formattedJSON = JSON.stringify(results[0].purchases, null, 2);
+        const formattedJSON = JSON.stringify(results, null, 2);
         res.setHeader('Content-Type', 'application/json');
         res.end(formattedJSON);
     })
