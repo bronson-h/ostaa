@@ -61,16 +61,24 @@ function addItem() {
 
 function login() {
     let user = {
-        username: document.getElementById('newUsername').value,
-        password: document.getElementById('newPassword').value
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value
     };
 
-    fetch('/account/login', {
+    fetch('/login', {
         method:'POST',
         body: JSON.stringify(user),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
-        return res.text();
+        return response = res.text();
+    }).then((response) => {
+        if(response == 'Successful') {
+            console.log('redirect soon');
+            window.location.href = '/home.html';
+        } else {
+            let fail = document.getElementById('failMessage');
+            fail.innerText = "Login attempt failed";
+        }
     }).catch((err) => {
         console.log(err);
     })
