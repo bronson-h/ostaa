@@ -10,10 +10,12 @@
 
 const mongoose = require('mongoose');
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const parser = require('body-parser');
 const app = express();
 const port = 80;
-app.use(express.static('public_html'));
+app.use(cookieParser());
+app.use(express.json());
 app.use(parser.json());
 // Sets up the mongoose database
 const db  = mongoose.connection;
@@ -37,6 +39,70 @@ var itemSchema = new mongoose.Schema({
     stat: String
 });
 var itemData = mongoose.model('itemData', itemSchema);
+
+let sessions = {};
+
+function addSession(username) {
+  let sid = Math.floor(Math.random() * 1000000000);
+  let now = Date.now();
+  sessions[username] = {id: sid, time: now};
+  return sid;
+}
+
+function removeSessions() {
+  let now = Date.now();
+  let usernames = Object.keys(sessions);
+  for (let i = 0; i < usernames.length; i++) {
+    let last = sessions[usernames[i]].time;
+    //if (last + 120000 < now) {
+    if (last + 20000 < now) {
+      delete sessions[usernames[i]];
+    }
+  }
+  console.log(sessions);
+}
+
+setInterval(removeSessions, 2000);
+
+function authenticate(req, res, next) {
+    let c = req.cookies;
+    console.log('auth request:');
+    console.log(req.cookies);
+    if (c != undefined) {
+      if (sessions[c.login.username] != undefined && 
+        sessions[c.login.username].id == c.login.sessionID) {
+        next();
+      } else {
+        res.redirect('/account/index.html');
+      }
+    }  else {
+      res.redirect('/account/index.html');
+    }
+  }
+  
+  app.use('/app/*', authenticate);
+  app.get('/app/*', (req, res, next) => { 
+    console.log('another');
+    next();
+  });
+  app.use(express.static('public_html'))
+
+  app.post('/account/login', (req, res) => { 
+    console.log(sessions);
+    let u = req.body;
+    let p1 = userData.find({username: u.username, password: u.password}).exec();
+    p1.then( (results) => { 
+      if (results.length == 0) {
+        res.end('Could not find account');
+      } else {
+        let sid = addSession(u.username);  
+        res.cookie("login", 
+          {username: u.username, sessionID: sid}, 
+          {maxAge: 60000 * 2 });
+        res.end('SUCCESS');
+      }
+    });
+  });
 
 // gets users from database and returns them as a JSON array to client
 app.get('/get/users', (req,res) => {

@@ -4,7 +4,6 @@
  * requests sent to server for adding a user and adding an item.
  */
 
-const { response } = require("express");
 
 /**
  * This function is used when someone tries to create a new user
@@ -49,6 +48,23 @@ function addItem() {
     fetch(`/add/item/${item[username]}`, {
         method: 'POST',
         body: JSON.stringify(item),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        return res.text();
+    }).catch((err) => {
+        console.log(err);
+    })
+}
+
+function login() {
+    let user = {
+        username: document.getElementById('newUsername').value,
+        password: document.getElementById('newPassword').value
+    };
+
+    fetch('/account/login', {
+        method:'POST',
+        body: JSON.stringify(user),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
         return res.text();
