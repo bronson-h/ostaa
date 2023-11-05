@@ -51,9 +51,12 @@ function addItem() {
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
         return res.text();
+    }).then((text) => {
+        window.location.href = '/home.html';
     }).catch((err) => {
         console.log(err);
-    })
+        redirectHome();
+    });
 }
 
 function login() {
@@ -71,4 +74,16 @@ function login() {
     }).catch((err) => {
         console.log(err);
     })
+}
+
+function redirectHome(){
+    window.location.href = '/home.html';
+}
+
+function redirectPost(){
+    window.location.href = '/post.html';
+}
+
+function selectfile(){
+
 }

@@ -4,10 +4,10 @@
         <meta charset="utf-8">
         <title>Ostaa</title>
         <link type="text/css" rel="stylesheet" href="stylePost.css">
+        <script src="client.js"></script>
     </head>
     <body>
         <div>
-            <script src="client.js"></script>
             <p id="ostaa">Ostaa</p>
             <label for="title">Title</label>
             <input type="text" id="title" name="title"><br><br>
@@ -17,8 +17,11 @@
             <input type="text" id="price" name="price"><br><br>
             <label for="status">Status</label>
             <input type="text" id="status" name="status"><br><br>
-            <input type="button" id="image" value="Choose File" name="image"><br><br>
-            <p>No file chosen</p>
+            <!-- Image work should uncomment for extra credit-->
+            <label for="image">Image</label>
+            <input type="text" id="image" name="image"><br><br>
+            <!-- <input type="button" id="image" onclick="selectfile()" value="Choose File" name="image"><br><br>
+            <p>No file chosen</p> -->
             <input type="button" value="Add Item" id="itemButton" onclick="addItem()">
         </div>
     </body>
