@@ -57,6 +57,30 @@ function addItem() {
     });
 }
 
+function checkCreateUser(){
+    let user = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value
+    };
+    fetch('/UserCreate', {
+        method:'POST',
+        body: JSON.stringify(user),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        return response = res.text();
+    }).then((response) => {
+        console.log(response);
+        if(response == 'successful') {
+            addNewUser();
+        } else {
+            alert("Username already used")
+        }
+    }).catch((err) => {
+        console.log(err);
+    })
+    
+}
+
 function login() {
     let user = {
         username: document.getElementById('username').value,

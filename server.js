@@ -105,6 +105,21 @@ function authenticate(req, res, next) {
     });
   });
 
+  app.post('/UserCreate', (req, res) => { 
+    console.log(sessions);
+    let u = req.body;
+    console.log(u.username);
+    let p1 = userData.find({username: u.username}).exec();
+    p1.then( (results) => { 
+      console.log(results);
+      if (results.length == 0) {
+        res.end('successful');
+      } else {
+        res.end('unsuccessful');
+      }
+    });
+  });
+
 // gets users from database and returns them as a JSON array to client
 app.get('/get/users', (req,res) => {
     let users = userData.find({}).exec();
