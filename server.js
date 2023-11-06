@@ -56,7 +56,7 @@ function removeSessions() {
   for (let i = 0; i < usernames.length; i++) {
     let last = sessions[usernames[i]].time;
     //if (last + 120000 < now) {
-    if (last + 20000 < now) {
+    if (last + 120000 < now) {
       delete sessions[usernames[i]];
     }
   }
@@ -182,13 +182,13 @@ app.post('/add/user/', (req,res) => {
 });
 
 // adds item to database and adds item to username's list of items
-app.post('/add/item/:username', (req,res) => {
+app.post('/add/item', (req,res) => {
     let pTitle = req.body.title;
     let pDesc = req.body.description;
     let pImg = req.body.image;
     let pPrice = req.body.price;
     let pStat = req.body.status;
-    let pUser = req.body.username;
+    let pUser = req.cookies.login.username;
     let itemObj = {title: pTitle, description: pDesc, image: pImg, price: pPrice, status: pStat};
     if(pStat == 'SALE') { 
         let item = new itemData(itemObj);
