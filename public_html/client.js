@@ -43,19 +43,17 @@ function addItem() {
         image: document.getElementById('image').value,
         price: document.getElementById('price').value,
         status: document.getElementById('status').value,
-        username: document.getElementById('userItem').value
     }
-    fetch(`/add/item/${item[username]}`, {
+    fetch(`/add/item`, {
         method: 'POST',
         body: JSON.stringify(item),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
-        return res.text();
+        text = res.text();
     }).then((text) => {
         window.location.href = '/home.html';
     }).catch((err) => {
         console.log(err);
-        redirectHome();
     });
 }
 
