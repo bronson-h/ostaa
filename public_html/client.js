@@ -111,8 +111,9 @@ document.addEventListener('DOMContentLoaded', welcMsg);
 function welcMsg() {
     let msg = document.getElementById("welcomeMsg");
     fetch('/getUser')
-        .then((res) => res.text())
+        .then((res) => {return res.text()})
         .then((user) => {
+            console.log(user);
             msg.innerText = "Welcome " + user + "! What would you like to do?";
         })
         .catch((err) => {
@@ -131,9 +132,11 @@ function searchListings() {
         for(jsonObj of retObj) {
             htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
             ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
-            if(jsonObj.stat == 'SALE') {
+            console.log(jsonObj);
+            console.log(jsonObj.status);
+            if(jsonObj.status == 'SALE') {
                 htmlStr = htmlStr + "<input type='button' id='buyButton name='buyButton' value='Buy Now' onclick='buyItem()'></div>";
-            } else if(jsonObj.stat == 'SOLD') {
+            } else if(jsonObj.status == 'SOLD') {
                 htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
             } else {
                 htmlStr = htmlStr + '<p>Unsure about item</p></div>';
@@ -188,9 +191,9 @@ function displayPurchases() {
         for(jsonObj of retObj) {
             htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
             ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
-            if(jsonObj.stat == 'SALE') {
+            if(jsonObj.status == 'SALE') {
                 htmlStr = htmlStr + "<input type='button' id='buyButton name='buyButton' value='Buy Now'></div>";
-            } else if(jsonObj.stat == 'SOLD') {
+            } else if(jsonObj.status == 'SOLD') {
                 htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
             } else {
                 htmlStr = htmlStr + '<p>Unsure about item</p></div>';

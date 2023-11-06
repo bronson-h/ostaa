@@ -212,9 +212,9 @@ app.post('/add/item', (req,res) => {
     let pDesc = req.body.description;
     let pImg = req.body.image;
     let pPrice = req.body.price;
-    let pStat = req.body.status;
+    let pStat = req.body.stat;
     let pUser = req.cookies.login.username;
-    let itemObj = {title: pTitle, description: pDesc, image: pImg, price: pPrice, status: pStat};
+    let itemObj = {title: pTitle, description: pDesc, image: pImg, price: pPrice, stat: pStat};
     if(pStat == 'SALE') { 
         let item = new itemData(itemObj);
         item.save()
