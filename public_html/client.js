@@ -80,3 +80,28 @@ function login() {
         console.log(err);
     })
 }
+
+function searchListings() {
+    let keyword = document.getElementById('searchInput');
+    fetch(`/get/listings/${keyword}`).then((res) => {
+        return res.text();
+    }).then((res) => {
+        return JSON.parse(res);
+    }).then((retObj) => {
+        let htmlStr = '';
+        for(jsonObj of retObj) {
+            htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
+            ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
+            if(jsonObj.stat == 'SALE') {
+                htmlStr = htmlStr + "<input type='button' id='buyButton name='buyButton' value='Buy Now'>";
+            } else if(jsonObj.stat == 'SOLD') {
+                htmlStr = htmlStr + '<p>This item has been purchased</p>';
+            } else {
+                htmlStr = htmlStr + '<p>Unsure about item</p>';
+            }
+        }
+        console.log(htmlStr)
+        let right = document.getElementById('rightSide')
+        right.innerHTML = htmlStr;
+    })
+}
