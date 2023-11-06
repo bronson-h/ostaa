@@ -20,8 +20,9 @@ body, html {
     padding: 0;
 }
 #ostaaHeader {
-    margin-top: 4%;
-    margin-left: 2%;
+    position: fixed;
+    left: 2%;
+    top: -1%;
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 1;
@@ -30,6 +31,11 @@ body, html {
     font-size: 36px;
 }
 #leftSide {
+    position: fixed;
+    top:10%;
+    bottom:0;
+    left:0;
+    right:50%;
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 2;
@@ -44,6 +50,13 @@ input {
     margin-top: 3%;
 }
 #rightSide {
+    
+    position: fixed;
+    top:10%;
+    bottom:0;
+    left:50%;
+    right:0;
+    overflow-y:scroll;
     grid-column-start: 2;
     grid-row-start: 2;
     background-color: lightgreen;

@@ -146,13 +146,7 @@ function searchListings() {
 }
 
 
-function redirectHome(){
-    window.location.href = '/home.html';
-}
 
-function redirectPost(){
-    window.location.href = '/post.html';
-}
 
 function selectfile(){
 
