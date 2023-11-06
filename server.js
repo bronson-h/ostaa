@@ -153,8 +153,10 @@ app.get('/get/listings', (req,res) => {
 });
 
 // gets purchases from database by certain username and returns JSON array
-app.get('/get/purchases/:username', (req,res) => {
-    let userPurchases = userData.find({username:{$regex:req.params.username}}).exec();
+app.get('/get/purchases/', (req,res) => {
+    let c = req.cookies;
+    let currUsername = c.login.username;
+    let userPurchases = userData.find({username:{$regex:currUsername}}).exec();
     userPurchases.then((results) => {
         const formattedJSON = JSON.stringify(results[0].purchases, null, 2);
         res.setHeader('Content-Type', 'application/json');
