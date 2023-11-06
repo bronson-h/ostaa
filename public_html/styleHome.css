@@ -19,7 +19,7 @@ body, html {
     margin: 0;
     padding: 0;
 }
-p {
+#ostaaHeader {
     margin-top: 4%;
     margin-left: 2%;
     grid-column-start: 1;

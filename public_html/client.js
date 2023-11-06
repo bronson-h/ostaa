@@ -120,8 +120,8 @@ function welcMsg() {
 }
 
 function searchListings() {
-    let keyword = document.getElementById('searchInput');
-    fetch(`/get/listings/${keyword}`).then((res) => {
+    let keyword = document.getElementById('searchInput').value;
+    fetch(`/search/items/${keyword}`).then((res) => {
         return res.text();
     }).then((res) => {
         return JSON.parse(res);
@@ -131,11 +131,11 @@ function searchListings() {
             htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
             ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
             if(jsonObj.stat == 'SALE') {
-                htmlStr = htmlStr + "<input type='button' id='buyButton name='buyButton' value='Buy Now'>";
+                htmlStr = htmlStr + "<input type='button' id='buyButton name='buyButton' value='Buy Now' onclick='buyItem()'></div>";
             } else if(jsonObj.stat == 'SOLD') {
-                htmlStr = htmlStr + '<p>This item has been purchased</p>';
+                htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
             } else {
-                htmlStr = htmlStr + '<p>Unsure about item</p>';
+                htmlStr = htmlStr + '<p>Unsure about item</p></div>';
             }
         }
         console.log(htmlStr)
@@ -155,4 +155,52 @@ function redirectPost(){
 
 function selectfile(){
 
+}
+
+function displayListings() {
+    fetch(`/get/listings`).then((res) => {
+        return res.text();
+    }).then((res) => {
+        return JSON.parse(res);
+    }).then((retObj) => {
+        let htmlStr = '';
+        for(jsonObj of retObj) {
+            htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
+            ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
+            if(jsonObj.stat == 'SALE') {
+                htmlStr = htmlStr + "<input type='button' id='buyButton name='buyButton' value='Buy Now'></div>";
+            } else if(jsonObj.stat == 'SOLD') {
+                htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
+            } else {
+                htmlStr = htmlStr + '<p>Unsure about item</p></div>';
+            }
+        }
+        console.log(htmlStr)
+        let right = document.getElementById('rightSide')
+        right.innerHTML = htmlStr;
+    })
+}
+
+function displayPurchases() {
+    fetch(`/get/purchases`).then((res) => {
+        return res.text();
+    }).then((res) => {
+        return JSON.parse(res);
+    }).then((retObj) => {
+        let htmlStr = '';
+        for(jsonObj of retObj) {
+            htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
+            ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
+            if(jsonObj.stat == 'SALE') {
+                htmlStr = htmlStr + "<input type='button' id='buyButton name='buyButton' value='Buy Now'></div>";
+            } else if(jsonObj.stat == 'SOLD') {
+                htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
+            } else {
+                htmlStr = htmlStr + '<p>Unsure about item</p></div>';
+            }
+        }
+        console.log(htmlStr)
+        let right = document.getElementById('rightSide')
+        right.innerHTML = htmlStr;
+    })
 }

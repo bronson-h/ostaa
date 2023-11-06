@@ -145,8 +145,10 @@ app.get('/get/items', (req,res) => {
 });
 
 // gets listings based on username from database and returns them as JSON array
-app.get('/get/listings/:username', (req,res) => {
-    let userItems = userData.find({username:{$regex:req.params.username}}).exec();
+app.get('/get/listings', (req,res) => {
+    let c = req.cookies;
+    let currUsername = c.login.username;
+    let userItems = userData.find({username:{$regex:currUsername}}).exec();
     userItems.then((results) => {
         const formattedJSON = JSON.stringify(results[0].listings, null, 2);
         res.setHeader('Content-Type', 'application/json');
@@ -155,8 +157,10 @@ app.get('/get/listings/:username', (req,res) => {
 });
 
 // gets purchases from database by certain username and returns JSON array
-app.get('/get/purchases/:username', (req,res) => {
-    let userPurchases = userData.find({username:{$regex:req.params.username}}).exec();
+app.get('/get/purchases/', (req,res) => {
+    let c = req.cookies;
+    let currUsername = c.login.username;
+    let userPurchases = userData.find({username:{$regex:currUsername}}).exec();
     userPurchases.then((results) => {
         const formattedJSON = JSON.stringify(results[0].purchases, null, 2);
         res.setHeader('Content-Type', 'application/json');
