@@ -105,8 +105,10 @@ function authenticate(req, res, next) {
     });
   });
 
-  app.post('/getUser', (req, res) => {
-    res.end(req.cookies.login.username);
+  app.get('/getUser', (req, res) => {
+    var name = req.cookies.login.username;
+    console.log(name);
+    res.end(name);
   });
 
   app.post('/UserCreate', (req, res) => { 

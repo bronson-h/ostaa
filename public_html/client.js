@@ -107,16 +107,17 @@ function login() {
         console.log(err);
     })
 }
-
+document.addEventListener('DOMContentLoaded', welcMsg);
 function welcMsg() {
     let msg = document.getElementById("welcomeMsg");
-    fetch('/getUser').then((res) => {
-        let user = res.text;
-    }).then(user => {
-        msg.innerText = "Welcome " + user + "! What would you like to do?"
-    }).catch((err) => {
-        console.log(err);
-    })
+    fetch('/getUser')
+        .then((res) => res.text())
+        .then((user) => {
+            msg.innerText = "Welcome " + user + "! What would you like to do?";
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 }
 
 function searchListings() {
