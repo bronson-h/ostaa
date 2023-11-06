@@ -49,9 +49,11 @@ function addItem() {
         body: JSON.stringify(item),
         headers: {'Content-Type': 'application/json'}
     }).then((res) => {
-        text = res.text();
+        window.location.href = '/home.html';
+        return res.text();
     }).then((text) => {
         window.location.href = '/home.html';
+        return;
     }).catch((err) => {
         console.log(err);
     });
@@ -101,6 +103,17 @@ function login() {
             let fail = document.getElementById('failMessage');
             fail.innerText = "Login attempt failed";
         }
+    }).catch((err) => {
+        console.log(err);
+    })
+}
+
+function welcMsg() {
+    let msg = document.getElementById("welcomeMsg");
+    fetch('/getUser').then((res) => {
+        let user = res.text;
+    }).then(user => {
+        msg.innerText = "Welcome " + user + "! What would you like to do?"
     }).catch((err) => {
         console.log(err);
     })

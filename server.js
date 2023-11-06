@@ -105,6 +105,10 @@ function authenticate(req, res, next) {
     });
   });
 
+  app.post('/getUser', (req, res) => {
+    res.end(req.cookies.login.username);
+  });
+
   app.post('/UserCreate', (req, res) => { 
     console.log(sessions);
     let u = req.body;
@@ -217,7 +221,8 @@ app.post('/add/item', (req,res) => {
                     let list = user.listings
                     list.push(itemObj);
                     console.log(user);
-                    return user.save();
+                    user.save();
+                    res.end("Successful");
                 });
             })
             .catch((error) => {
@@ -231,7 +236,8 @@ app.post('/add/item', (req,res) => {
             let itemsPurchased = user.purchases;
             itemsPurchased.push(itemObj);
             console.log(user);
-            return user.save();
+            user.save();
+            res.end("Successful");
         })
     }
 });
