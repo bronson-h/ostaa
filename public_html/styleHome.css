@@ -61,3 +61,12 @@ input {
     margin-right: 2%;
     margin-top: 1%;
 }
+
+#welcomeMsg {
+    margin-left: 5%;
+    margin-top: 10%;
+    margin-bottom: 5%;
+    font-size: 150%;
+    font-weight: bold;
+
+}
