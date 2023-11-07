@@ -106,13 +106,16 @@ function authenticate(req, res, next) {
   });
 
   app.get('/getUser', (req, res) => {
+    if (req.cookies.login == null){
+      res.end("NO NAME");
+    } else {
     var name = req.cookies.login.username;
     console.log(name);
     res.end(name);
+    }
   });
 
   app.post('/UserCreate', (req, res) => { 
-    console.log(sessions);
     let u = req.body;
     console.log(u.username);
     let p1 = userData.find({username: u.username}).exec();
