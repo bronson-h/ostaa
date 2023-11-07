@@ -248,5 +248,28 @@ app.post('/add/item', (req,res) => {
     }
 });
 
+app.post('/buy/item', (req,res) => {
+    let c = req.cookies;
+    let currUsername = c.login.username;
+    var purchasedItem;
+    let itemTitle = req.body.title;
+    let query = itemData.find({title:{$regex:itemTitle}}).exec();
+    query.then((itemList) => {
+      let currItem = itemList[0];
+      currItem.stat = 'SOLD';
+      currItem.save();
+      purchasedItem = currItem;
+    });
+    let query2 = userData.find({username:{$regex:currUsername}}).exec();
+    query2.then((userList) => {
+      let currUser = userList[0];
+      let itemsPurchased = currUser.purchases;
+      itemsPurchased.push(purchasedItem);
+      console.log(purchasedItem);
+      currUser.save();
+      res.end("Successful");
+    })
+})
+
 app.listen(port, () => 
     console.log(`App listening at http://localhost:${port}`));

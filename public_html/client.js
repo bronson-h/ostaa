@@ -129,14 +129,16 @@ function searchListings() {
         return JSON.parse(res);
     }).then((retObj) => {
         let htmlStr = '';
+        let buttonIndex = 0;
         for(jsonObj of retObj) {
-            htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
+            htmlStr = htmlStr + `<div class='right'><p id='title${buttonIndex}'>${jsonObj.title}</p><p>
             ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
             console.log(jsonObj);
             console.log(jsonObj.status);
-            if(jsonObj.status == 'SALE') {
-                htmlStr = htmlStr + "<input type='button' id='buyButton name='buyButton' value='Buy Now' onclick='buyItem()'></div>";
-            } else if(jsonObj.status == 'SOLD') {
+            if(jsonObj.status == 'SALE' || jsonObj.stat == 'SALE') {
+                htmlStr = htmlStr + `<input type='button' id='buyButton name='buyButton' value='Buy Now' onclick='buyNow(${buttonIndex})'></div>`;
+                buttonIndex++;
+            } else if(jsonObj.status == 'SOLD' || jsonObj.stat == 'SOLD') {
                 htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
             } else {
                 htmlStr = htmlStr + '<p>Unsure about item</p></div>';
@@ -162,18 +164,20 @@ function displayListings() {
         return JSON.parse(res);
     }).then((retObj) => {
         let htmlStr = '';
+        let buttonIndex = 0;
         for(jsonObj of retObj) {
-            htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
+            htmlStr = htmlStr + `<div class='right'><p id='title${buttonIndex}'>${jsonObj.title}</p><p>
             ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
             console.log(jsonObj);
             console.log(jsonObj.status);
-            if(jsonObj.status == 'SALE') {
-                htmlStr = htmlStr + "<input type='button' id='buyButton name='buyButton' value='Buy Now'></div>";
-            } else if(jsonObj.status == 'SOLD') {
+            if(jsonObj.status == 'SALE' || jsonObj.stat == 'SALE') {
+                htmlStr = htmlStr + `<input type='button' id='buyButton' name='buyButton' value='Buy Now' onclick='buyNow(${buttonIndex})'></div>`;
+            } else if(jsonObj.status == 'SOLD' || jsonObj.stat == 'SOLD') {
                 htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
             } else {
                 htmlStr = htmlStr + '<p>Unsure about item</p></div>';
             }
+            buttonIndex++;
         }
         console.log(htmlStr)
         let right = document.getElementById('rightSide')
@@ -191,9 +195,9 @@ function displayPurchases() {
         for(jsonObj of retObj) {
             htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
             ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
-            if(jsonObj.status == 'SALE') {
-                htmlStr = htmlStr + "<input type='button' id='buyButton name='buyButton' value='Buy Now'></div>";
-            } else if(jsonObj.status == 'SOLD') {
+            if(jsonObj.status == 'SALE' || jsonObj.stat == 'SALE') {
+                htmlStr = htmlStr + "<input type='button' class='buyButton name='buyButton' value='Buy Now'></div>";
+            } else if(jsonObj.status == 'SOLD' || jsonObj.stat == 'SOLD') {
                 htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
             } else {
                 htmlStr = htmlStr + '<p>Unsure about item</p></div>';
@@ -208,4 +212,21 @@ function displayPurchases() {
 function redirectPost() {
     console.log('go to create item');
     window.location.href = '/post.html'; 
+}
+
+function buyNow(buttonIndex) {
+    let currId = `title${buttonIndex}`;
+    let currTitle = document.getElementById(currId).innerText;
+    console.log(currTitle);
+    let currTitleObj = { title: currTitle };
+    console.log('got the title');
+    fetch('/buy/item', {
+        method: 'POST',
+        body: JSON.stringify(currTitleObj),
+        headers: {'Content-Type': 'application/json'}
+    }).then((res) => {
+        return res.text();
+    }).catch((err) => {
+        console.log(err);
+    });
 }
