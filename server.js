@@ -65,6 +65,22 @@ function removeSessions() {
 
 setInterval(removeSessions, 2000);
 
+// new attempt to get user back to page if not signed in
+app.get('/check/valid/user', (req,res) => {
+  let c = req.cookies;
+  console.log(c);
+  if (c != {}) {
+    if (sessions[c.login.username] != undefined && 
+      sessions[c.login.username].id == c.login.sessionID) {
+      res.end('valid user');
+    } else {
+      res.redirect('/index.html');
+    }
+  }  else {
+    res.redirect('/index.html');
+  } 
+});
+
 function authenticate(req, res, next) {
     let c = req.cookies;
     console.log('auth request:');

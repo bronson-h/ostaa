@@ -230,3 +230,9 @@ function buyNow(buttonIndex) {
         console.log(err);
     });
 }
+
+function checkValid() {
+    fetch('/check/valid/user').then((response) => {
+        return response.text();
+    });
+}
