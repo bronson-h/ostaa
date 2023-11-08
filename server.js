@@ -83,7 +83,6 @@ app.get('/check/valid/user', (req,res) => {
     }
   }  else {
     res.end('redirect');
-    res.redirect('/index.html');
   } 
 });
 
@@ -141,16 +140,23 @@ function authenticate(req, res, next) {
 
   app.post('/UserCreate', (req, res) => { 
     let u = req.body;
-    console.log(u.username);
-    let p1 = userData.find({username: u.username}).exec();
-    p1.then( (results) => { 
-      console.log(results);
-      if (results.length == 0) {
-        res.end('successful');
-      } else {
-        res.end('unsuccessful');
-      }
-    });
+    var name = u.username;
+    console.log(req.body.username);
+    if (name.length <= 0){
+      res.end("unsuccessful");
+    } else {
+      console.log(u.username);
+      let p1 = userData.find({username: u.username}).exec();
+      p1.then( (results) => { 
+        console.log(results);
+        if (results.length == 0) {
+          res.end('successful');
+        } else {
+
+          res.end('unsuccessful');
+        }
+      });
+  }
   });
 
 // gets users from database and returns them as a JSON array to client

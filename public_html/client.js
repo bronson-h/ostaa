@@ -61,8 +61,8 @@ function addItem() {
 
 function checkCreateUser(){
     let user = {
-        username: document.getElementById('username').value,
-        password: document.getElementById('password').value
+        username: document.getElementById('newUsername').value,
+        password: document.getElementById('newPassword').value
     };
     fetch('/UserCreate', {
         method:'POST',
