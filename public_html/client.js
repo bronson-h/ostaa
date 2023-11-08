@@ -82,6 +82,25 @@ function checkCreateUser(){
     })
     
 }
+checkValidUser(); // Initial call
+setInterval(checkValidUser, 2000);
+
+function checkValidUser() {
+    fetch('/check/valid/user').then((res) => {
+        return res.text();
+    }).then((text) => {
+        if (text == 'reload') {
+            console.log(window.location.href);
+            if (window.location.href != '/index.html'){
+                window.location.href = '/index.html';
+            }
+        } else {
+            console.log('Valid user');
+        }
+    }).catch((err) => {
+        console.log(err);
+    });
+}
 
 function login() {
     let user = {
@@ -113,7 +132,7 @@ function welcMsg() {
     fetch('/getUser')
         .then((res) => {return res.text()})
         .then((user) => {
-            console.log(user);
+
             msg.innerText = "Welcome " + user + "! What would you like to do?";
         })
         .catch((err) => {
@@ -193,6 +212,7 @@ function displayPurchases() {
     }).then((retObj) => {
         let htmlStr = '';
         for(jsonObj of retObj) {
+            console.log(jsonObj);
             htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
             ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
             if(jsonObj.status == 'SALE' || jsonObj.stat == 'SALE') {

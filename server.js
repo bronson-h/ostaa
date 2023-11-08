@@ -56,29 +56,41 @@ function removeSessions() {
   for (let i = 0; i < usernames.length; i++) {
     let last = sessions[usernames[i]].time;
     //if (last + 120000 < now) {
-    if (last + 120000 < now) {
+    if (last + 20000 < now) {
       delete sessions[usernames[i]];
+
+      
     }
   }
   console.log(sessions);
 }
 
-setInterval(removeSessions, 2000);
+
+//setInterval(removeSessions, 2000);
 
 // new attempt to get user back to page if not signed in
 app.get('/check/valid/user', (req,res) => {
-  let c = req.cookies;
-  console.log(c);
-  if (c != {}) {
-    if (sessions[c.login.username] != undefined && 
-      sessions[c.login.username].id == c.login.sessionID) {
-      res.end('valid user');
+  let now = Date.now();
+  if (req.cookies == null || req.cookies.login == null || req.cookies.login.username == undefined){
+    res.end("NO NAME");
+  } else {
+    let curUser = req.cookies.login.username;
+    console.log(curUser);
+    console.log(sessions);
+    let sessUser = sessions[curUser];
+    console.log(sessUser);
+    if (sessUser == undefined){
+      res.end("NO NAME")
+    } else {if (sessUser.time + 20000 < now){
+      delete(sessions[curUser]);
+      req.cookies.login = null;
+      res.end("reload");
     } else {
-      res.redirect('/index.html');
+      res.end("valid");
     }
-  }  else {
-    res.redirect('/index.html');
-  } 
+  }
+    
+}
 });
 
 function authenticate(req, res, next) {
@@ -109,6 +121,7 @@ function authenticate(req, res, next) {
     let u = req.body;
     let p1 = userData.find({username: u.username, password: u.password}).exec();
     p1.then( (results) => { 
+      console.log(results);
       if (results.length == 0) {
         res.end('Unsuccessful');
       } else {
