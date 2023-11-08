@@ -148,6 +148,7 @@ function login() {
         console.log(err);
     })
 }
+//This is the welcome message that is on the homescreen that includes the username
 document.addEventListener('DOMContentLoaded', welcMsg);
 
 /**

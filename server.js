@@ -1,11 +1,12 @@
 /**
  * Name: Bronson Housmans and Billy Dolny
- * Project: Ostaa Part 1
+ * Project: Ostaa Part 2
  * Description: Server for the Ostaa page. Contains the schema for the database
  * such that information for users and items are accurate. Is able to handle 
  * get requests where the server will send back information in JSON formatting.
  * Also able to have post requests for adding a user and an item that can be 
- * either for sale or sold.
+ * either for sale or sold. This should alsos check if users are valid and 
+ * keeps track of the cookies an creates the database.
  */
 
 const mongoose = require('mongoose');
@@ -43,13 +44,14 @@ var itemData = mongoose.model('itemData', itemSchema);
 
 let sessions = {};
 
+//adds a new session element
 function addSession(username) {
   let sid = Math.floor(Math.random() * 1000000000);
   let now = Date.now();
   sessions[username] = {id: sid, time: now};
   return sid;
 }
-
+//removes a session element
 function removeSessions() {
   let now = Date.now();
   let usernames = Object.keys(sessions);
@@ -86,6 +88,7 @@ app.get('/check/valid/user', (req,res) => {
   } 
 });
 
+//This also checkts to see if the authentication for the cookies work.
 function authenticate(req, res, next) {
     console.log('authenticate ran!');
     let c = req.cookies;
@@ -110,6 +113,7 @@ function authenticate(req, res, next) {
   });
   app.use(express.static('public_html'))
 
+  //This function is used to see if the login is valid or not.
   app.post('/login', (req, res) => { 
     console.log(sessions);
     let u = req.body;
@@ -127,7 +131,10 @@ function authenticate(req, res, next) {
       }
     });
   });
-
+  
+  //This get function is used to see if the 
+  //there is a login username used or not and if so
+  //It sends it to the client.
   app.get('/getUser', (req, res) => {
     if (req.cookies.login == null){
       res.end("NO NAME");
@@ -138,6 +145,8 @@ function authenticate(req, res, next) {
     }
   });
 
+  //This is the post function that creates the user 
+  //and also used to check if its is a duplicate or not.
   app.post('/UserCreate', (req, res) => { 
     let u = req.body;
     var name = u.username;
@@ -281,7 +290,7 @@ app.post('/add/item', (req,res) => {
         })
     }
 });
-
+//Thus function is used to buy an item and move it to the users purchases
 app.post('/buy/item', (req,res) => {
     let c = req.cookies;
     let currUsername = c.login.username;
