@@ -286,8 +286,29 @@ app.post('/buy/item', (req,res) => {
       itemsPurchased.push(purchasedItem);
       console.log(purchasedItem);
       currUser.save();
-      res.end("Successful");
     })
+    let query3 = userData.find({}).exec();
+    query3.then((userList) => {
+      console.log(userList);
+      var listingsList;
+      for(let i = 0; i < userList.length; i++) {
+        listingsList = userList[i].listings;
+        for(let j = 0; j < listingsList.length; j++) {
+          if(listingsList[j].title == itemTitle) {
+            console.log('found same title');
+            //console.log(listingsList[j]);
+            listingsList[j].stat = 'SOLD';
+            let currListings = userList[i].listings;
+            currListings[j] = listingsList[j];
+            userList[i].save();
+            console.log('update');
+            console.log(listingsList[j]);
+            break;
+          }
+        } 
+      }
+    })
+    res.end('Successful');
 })
 
 app.listen(port, () => 
