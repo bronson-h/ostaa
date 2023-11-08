@@ -1,7 +1,10 @@
 /**
  * Name: Bronson Housmans and Billy Dolny
  * Description: Client side functionality for the Ostaa page. Includes post
- * requests sent to server for adding a user and adding an item.
+ * requests sent to server for adding a user and adding an item. Also has
+ * the ability to navigate between pages upon the user clicking a certain
+ * button. Is able to display a user's listings, purchases, and also perform
+ * a search of item descriptions.
  */
 
 
@@ -9,6 +12,7 @@
  * This function is used when someone tries to create a new user
  * They are able to create the name and password for the user then is
  * sent to the server to be created.
+ * @param: no parameters
  */
 function addNewUser() {
     alert('User created!');
@@ -59,6 +63,13 @@ function addItem() {
     });
 }
 
+/**
+ * This function is used to determine if the attempt to create a user is valid.
+ * If the username is new, the server responds with the message that the 
+ * account creation was successful and this is displayed to the user. Otherwise,
+ * the message that the username is already used is shown.
+ * @param: no parameters
+ */
 function checkCreateUser(){
     let user = {
         username: document.getElementById('newUsername').value,
@@ -85,6 +96,11 @@ function checkCreateUser(){
 checkValidUser(); // Initial call
 setInterval(checkValidUser, 2000);
 
+/**
+ * Checks if the user accessing a page of Ostaa has the appropriate cookie.
+ * If not they are sent to the login page
+ * @param: no parameters
+ */
 function checkValidUser() {
     fetch('/check/valid/user').then((res) => {
         return res.text();
@@ -102,6 +118,12 @@ function checkValidUser() {
     });
 }
 
+/**
+ * Fetches the login information provided to determine if the attempt is valid
+ * or not. If invalid a message is displayed to say that the login info was
+ * incorrect. If valid, the user is directed to the Ostaa home page.
+ * @param: no parameters
+ */
 function login() {
     let user = {
         username: document.getElementById('username').value,
@@ -127,6 +149,12 @@ function login() {
     })
 }
 document.addEventListener('DOMContentLoaded', welcMsg);
+
+/**
+ * This displays the welcome message at the top of the Ostaa left hand page.
+ * Includes the username that is taken from the cookie.
+ * @param: no parameters
+ */
 function welcMsg() {
     let msg = document.getElementById("welcomeMsg");
     fetch('/getUser')
@@ -140,6 +168,14 @@ function welcMsg() {
         });
 }
 
+/**
+ * Searches the listings based on the input from the user in the search text
+ * box. Sends a request to the server to find the items that match the word.
+ * Then the function determines what HTML to use for the right window of Ostaa.
+ * Will include a buy button if the item has not been bought yet or a message
+ * that the item has been purchased.
+ * @param: no parameters
+ */
 function searchListings() {
     let keyword = document.getElementById('searchInput').value;
     fetch(`/search/items/${keyword}`).then((res) => {
@@ -150,12 +186,12 @@ function searchListings() {
         let htmlStr = '';
         let buttonIndex = 0;
         for(jsonObj of retObj) {
-            htmlStr = htmlStr + `<div class='right'><p id='title${buttonIndex}'>${jsonObj.title}</p><p>
-            ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
-            console.log(jsonObj);
-            console.log(jsonObj.status);
+            htmlStr = htmlStr + `<div class='right'><p id='title${buttonIndex}'>
+            ${jsonObj.title}</p><p>${jsonObj.image}</p><p>${jsonObj.description}</p>
+            <p>${jsonObj.price}</p>`;
             if(jsonObj.status == 'SALE' || jsonObj.stat == 'SALE') {
-                htmlStr = htmlStr + `<input type='button' id='buyButton name='buyButton' value='Buy Now' onclick='buyNow(${buttonIndex})'></div>`;
+                htmlStr = htmlStr + `<input type='button' id='buyButton name='buyButton' 
+                value='Buy Now' onclick='buyNow(${buttonIndex})'></div>`;
             } else if(jsonObj.status == 'SOLD' || jsonObj.stat == 'SOLD') {
                 htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
             } else {
@@ -169,13 +205,14 @@ function searchListings() {
     })
 }
 
-
-
-
-function selectfile(){
-
-}
-
+/**
+ * Will display the listings made by a user on the right window of Ostaa.
+ * This is done with a fetch to the server that returns an array with all of 
+ * the user's listings as objects. These are iterated over and added to an
+ * HTML string. The program also keeps track if the item is for sale or has
+ * been bought.
+ * @param: no parameters
+ */
 function displayListings() {
     fetch(`/get/listings`).then((res) => {
         return res.text();
@@ -185,12 +222,14 @@ function displayListings() {
         let htmlStr = '';
         let buttonIndex = 0;
         for(jsonObj of retObj) {
-            htmlStr = htmlStr + `<div class='right'><p id='title${buttonIndex}'>${jsonObj.title}</p><p>
-            ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
+            htmlStr = htmlStr + `<div class='right'><p id='title${buttonIndex}'>
+            ${jsonObj.title}</p><p>${jsonObj.image}</p><p>${jsonObj.description}</p>
+            <p>${jsonObj.price}</p>`;
             console.log(jsonObj);
             console.log(jsonObj.status);
             if(jsonObj.status == 'SALE' || jsonObj.stat == 'SALE') {
-                htmlStr = htmlStr + `<input type='button' id='buyButton' name='buyButton' value='Buy Now' onclick='buyNow(${buttonIndex})'></div>`;
+                htmlStr = htmlStr + `<input type='button' id='buyButton' name='buyButton' 
+                value='Buy Now' onclick='buyNow(${buttonIndex})'></div>`;
             } else if(jsonObj.status == 'SOLD' || jsonObj.stat == 'SOLD') {
                 htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
             } else {
@@ -204,6 +243,13 @@ function displayListings() {
     })
 }
 
+/**
+ * This function displays the purchases that have been made by the user. Sends
+ * a fetch to the server to get the list of items in their purchases. Then
+ * creates an HTML string of all the info and sets the innerHTML of the right
+ * Ostaa window equal to it.
+ * @param: no parameters
+ */
 function displayPurchases() {
     fetch(`/get/purchases`).then((res) => {
         return res.text();
@@ -216,7 +262,8 @@ function displayPurchases() {
             htmlStr = htmlStr + `<div class='right'><p>${jsonObj.title}</p><p>
             ${jsonObj.image}</p><p>${jsonObj.description}</p><p>${jsonObj.price}</p>`;
             if(jsonObj.status == 'SALE' || jsonObj.stat == 'SALE') {
-                htmlStr = htmlStr + "<input type='button' class='buyButton name='buyButton' value='Buy Now'></div>";
+                htmlStr = htmlStr + `<input type='button' class='buyButton name='buyButton' 
+                value='Buy Now'></div>`;
             } else if(jsonObj.status == 'SOLD' || jsonObj.stat == 'SOLD') {
                 htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
             } else {
@@ -229,11 +276,22 @@ function displayPurchases() {
     })
 }
 
+/**
+ * Sends the user to the post.html page to create a new item
+ * @param: no parameters
+ */
 function redirectPost() {
     console.log('go to create item');
     window.location.href = '/post.html'; 
 }
 
+/**
+ * Function to buy the object when pressing the button on the right display.
+ * Sends a post request to the server to change information about the status
+ * of an item
+ * @param: buttonIndex: Number. used to know which item is bought since they
+ * are numbered with their id.
+ */
 function buyNow(buttonIndex) {
     console.log(buttonIndex);
     let currId = `title${buttonIndex}`;
@@ -252,6 +310,10 @@ function buyNow(buttonIndex) {
     });
 }
 
+/**
+ * Checks if user is valid and will redirect them to home if not
+ * @param: no parameters
+ */
 function checkValid() {
     fetch('/check/valid/user').then((response) => {
         return response.text();
