@@ -58,7 +58,7 @@ function addItem() {
         console.log(err);
     });
 }
-
+//Checks to see if creating the user is a duplicate or not
 function checkCreateUser(){
     let user = {
         username: document.getElementById('newUsername').value,
@@ -85,6 +85,7 @@ function checkCreateUser(){
 checkValidUser(); // Initial call
 setInterval(checkValidUser, 2000);
 
+//This checks to see if the user is still valid or not if not then return to login
 function checkValidUser() {
     fetch('/check/valid/user').then((res) => {
         return res.text();
@@ -102,6 +103,7 @@ function checkValidUser() {
     });
 }
 
+//This function logs the user in.
 function login() {
     let user = {
         username: document.getElementById('username').value,
@@ -126,6 +128,7 @@ function login() {
         console.log(err);
     })
 }
+//This is the welcome message that is on the homescreen that includes the username
 document.addEventListener('DOMContentLoaded', welcMsg);
 function welcMsg() {
     let msg = document.getElementById("welcomeMsg");
@@ -139,7 +142,8 @@ function welcMsg() {
             console.log(err);
         });
 }
-
+//This function sets up the listing for the right of the homescreen
+// using the specific string in the input.
 function searchListings() {
     let keyword = document.getElementById('searchInput').value;
     fetch(`/search/items/${keyword}`).then((res) => {
@@ -169,13 +173,7 @@ function searchListings() {
     })
 }
 
-
-
-
-function selectfile(){
-
-}
-
+//This displays the list that the user created.
 function displayListings() {
     fetch(`/get/listings`).then((res) => {
         return res.text();
@@ -203,7 +201,7 @@ function displayListings() {
         right.innerHTML = htmlStr;
     })
 }
-
+//This function displays the purchases that the user purchased
 function displayPurchases() {
     fetch(`/get/purchases`).then((res) => {
         return res.text();
@@ -229,11 +227,12 @@ function displayPurchases() {
     })
 }
 
+//This function should send the user back to the post.html screen
 function redirectPost() {
     console.log('go to create item');
     window.location.href = '/post.html'; 
 }
-
+//This function should buy the item and put it on the users purchases
 function buyNow(buttonIndex) {
     console.log(buttonIndex);
     let currId = `title${buttonIndex}`;
@@ -252,6 +251,7 @@ function buyNow(buttonIndex) {
     });
 }
 
+//This should check if the user is still valid to be on the homescreen or not.
 function checkValid() {
     fetch('/check/valid/user').then((response) => {
         return response.text();
