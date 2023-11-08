@@ -45,6 +45,7 @@ var itemData = mongoose.model('itemData', itemSchema);
 let sessions = {};
 
 //adds a new session element
+// @params: username: String. string of username logging in to session
 function addSession(username) {
   let sid = Math.floor(Math.random() * 1000000000);
   let now = Date.now();
@@ -52,6 +53,7 @@ function addSession(username) {
   return sid;
 }
 //removes a session element
+// @params: no parameters
 function removeSessions() {
   let now = Date.now();
   let usernames = Object.keys(sessions);
@@ -68,7 +70,7 @@ function removeSessions() {
 }
 
 
-//setInterval(removeSessions, 2000);
+setInterval(removeSessions, 2000);
 
 // new attempt to get user back to page if not signed in
 app.get('/check/valid/user', (req,res) => {
@@ -88,7 +90,13 @@ app.get('/check/valid/user', (req,res) => {
   } 
 });
 
-//This also checkts to see if the authentication for the cookies work.
+/**
+ * This also checks to see if the authentication for the cookies work.
+ * @params: req: String. the request sent from the server.
+ * res: Promise object. the response from the server back to the client
+ * next: Allows the server to progress to the next task in the route
+*/
+
 function authenticate(req, res, next) {
     console.log('authenticate ran!');
     let c = req.cookies;
@@ -321,13 +329,10 @@ app.post('/buy/item', (req,res) => {
           if(listingsList[j].title == itemTitle) {
             console.log('found same title');
             console.log(userList[i]);
-            //console.log(listingsList[j]);
             listingsList[j].stat = 'SOLD';
             let currListings = userList[i].listings;
             currListings[j] = listingsList[j];
             userList[i].save();
-            //console.log('update');
-            //console.log(listingsList[j]);
             break;
           }
         } 
