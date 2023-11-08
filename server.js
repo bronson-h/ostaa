@@ -56,7 +56,7 @@ function removeSessions() {
   for (let i = 0; i < usernames.length; i++) {
     let last = sessions[usernames[i]].time;
     //if (last + 120000 < now) {
-    if (last + 120000 < now) {
+    if (last + 12000 < now) {
       delete sessions[usernames[i]];
     }
   }
@@ -68,8 +68,10 @@ setInterval(removeSessions, 2000);
 // new attempt to get user back to page if not signed in
 app.get('/check/valid/user', (req,res) => {
   let c = req.cookies;
-  console.log(c);
-  if (c != {}) {
+  //console.log(c);
+  let cookieKeys = Object.keys(c);
+  console.log(cookieKeys);
+  if (cookieKeys.length > 0) {
     if (sessions[c.login.username] != undefined && 
       sessions[c.login.username].id == c.login.sessionID) {
       res.end('valid user');
@@ -77,11 +79,13 @@ app.get('/check/valid/user', (req,res) => {
       res.redirect('/index.html');
     }
   }  else {
+    res.end('redirect');
     res.redirect('/index.html');
   } 
 });
 
 function authenticate(req, res, next) {
+    console.log('authenticate ran!');
     let c = req.cookies;
     console.log('auth request:');
     console.log(req.cookies);
@@ -181,6 +185,7 @@ app.get('/get/listings', (req,res) => {
 app.get('/get/purchases/', (req,res) => {
     let c = req.cookies;
     let currUsername = c.login.username;
+    console.log(c);
     let userPurchases = userData.find({username:{$regex:currUsername}}).exec();
     userPurchases.then((results) => {
         const formattedJSON = JSON.stringify(results[0].purchases, null, 2);

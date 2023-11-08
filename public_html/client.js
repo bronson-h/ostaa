@@ -235,5 +235,9 @@ function buyNow(buttonIndex) {
 function checkValid() {
     fetch('/check/valid/user').then((response) => {
         return response.text();
+    }).then((response) => {
+        if(response == 'redirect') {
+            window.location.href = '/index.html';
+        }
     });
 }
