@@ -21,7 +21,7 @@ app.use(parser.json());
 
 // Sets up the mongoose database
 const db  = mongoose.connection;
-const mongoDBURL = 'mongodb://127.0.0.1/ostaa';
+const mongoDBURL = 'mongodb://127.0.0.1/ostaaD';
 mongoose.connect(mongoDBURL, { useNewUrlParser: true });
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
