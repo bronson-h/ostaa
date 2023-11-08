@@ -58,12 +58,15 @@ function removeSessions() {
     //if (last + 120000 < now) {
     if (last + 12000 < now) {
       delete sessions[usernames[i]];
+
+      
     }
   }
   console.log(sessions);
 }
 
-setInterval(removeSessions, 2000);
+
+//setInterval(removeSessions, 2000);
 
 // new attempt to get user back to page if not signed in
 app.get('/check/valid/user', (req,res) => {
@@ -76,11 +79,10 @@ app.get('/check/valid/user', (req,res) => {
       sessions[c.login.username].id == c.login.sessionID) {
       res.end('valid user');
     } else {
-      res.redirect('/index.html');
+      res.end("valid");
     }
   }  else {
     res.end('redirect');
-    res.redirect('/index.html');
   } 
 });
 
@@ -113,6 +115,7 @@ function authenticate(req, res, next) {
     let u = req.body;
     let p1 = userData.find({username: u.username, password: u.password}).exec();
     p1.then( (results) => { 
+      console.log(results);
       if (results.length == 0) {
         res.end('Unsuccessful');
       } else {
@@ -137,16 +140,23 @@ function authenticate(req, res, next) {
 
   app.post('/UserCreate', (req, res) => { 
     let u = req.body;
-    console.log(u.username);
-    let p1 = userData.find({username: u.username}).exec();
-    p1.then( (results) => { 
-      console.log(results);
-      if (results.length == 0) {
-        res.end('successful');
-      } else {
-        res.end('unsuccessful');
-      }
-    });
+    var name = u.username;
+    console.log(req.body.username);
+    if (name.length <= 0){
+      res.end("unsuccessful");
+    } else {
+      console.log(u.username);
+      let p1 = userData.find({username: u.username}).exec();
+      p1.then( (results) => { 
+        console.log(results);
+        if (results.length == 0) {
+          res.end('successful');
+        } else {
+
+          res.end('unsuccessful');
+        }
+      });
+  }
   });
 
 // gets users from database and returns them as a JSON array to client
