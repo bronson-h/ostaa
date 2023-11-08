@@ -137,12 +137,12 @@ function searchListings() {
             console.log(jsonObj.status);
             if(jsonObj.status == 'SALE' || jsonObj.stat == 'SALE') {
                 htmlStr = htmlStr + `<input type='button' id='buyButton name='buyButton' value='Buy Now' onclick='buyNow(${buttonIndex})'></div>`;
-                buttonIndex++;
             } else if(jsonObj.status == 'SOLD' || jsonObj.stat == 'SOLD') {
                 htmlStr = htmlStr + '<p>This item has been purchased</p></div>';
             } else {
                 htmlStr = htmlStr + '<p>Unsure about item</p></div>';
             }
+            buttonIndex++;
         }
         console.log(htmlStr)
         let right = document.getElementById('rightSide')
@@ -177,7 +177,7 @@ function displayListings() {
             } else {
                 htmlStr = htmlStr + '<p>Unsure about item</p></div>';
             }
-            buttonIndex++;
+            buttonIndex = buttonIndex + 1;
         }
         console.log(htmlStr)
         let right = document.getElementById('rightSide')
@@ -215,6 +215,7 @@ function redirectPost() {
 }
 
 function buyNow(buttonIndex) {
+    console.log(buttonIndex);
     let currId = `title${buttonIndex}`;
     let currTitle = document.getElementById(currId).innerText;
     console.log(currTitle);

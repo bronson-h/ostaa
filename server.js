@@ -296,13 +296,14 @@ app.post('/buy/item', (req,res) => {
         for(let j = 0; j < listingsList.length; j++) {
           if(listingsList[j].title == itemTitle) {
             console.log('found same title');
+            console.log(userList[i]);
             //console.log(listingsList[j]);
             listingsList[j].stat = 'SOLD';
             let currListings = userList[i].listings;
             currListings[j] = listingsList[j];
             userList[i].save();
-            console.log('update');
-            console.log(listingsList[j]);
+            //console.log('update');
+            //console.log(listingsList[j]);
             break;
           }
         } 
